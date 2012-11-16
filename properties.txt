@@ -1,0 +1,17 @@
+#cassandra.hosts=10.118.25.188:9160, 10.32.142.180:9160
+cassandra.hosts=ec2-204-236-250-175.compute-1.amazonaws.com:9160, ec2-23-20-184-212.compute-1.amazonaws.com:9160
+cassandra.cluster=Test Cluster
+cassandra.keyspace=IHR_local
+cassandra.size=10000000
+cassandra.batch=1000
+cassandra.events=50
+cassandra.type=
+# 0 is main standard col type, 1 is composite key column
+cassandra.colType=0
+#0 = loading data, 1 = reading data
+cassandra.operationType=0
+cassandra.profileId=50000
+cassandra.rows=75
+# Use this for running reads, for inserts, just run 1 thread
+cassandra.threads=1
+cassandra.readSize=100000
