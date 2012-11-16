@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:property-placeholder location="classpath:properties.txt" />
+
+	<import resource="data-source-beans.xml" />
+	<import resource="dao-beans.xml" />
+	<import resource="facade-beans.xml" />
+	<import resource="misc-beans.xml" />
+
+	<bean id="app" class="com.cass.ihr.MyApp">
+		<property name="historyFacade" ref="historyFacade" />
+		<constructor-arg value="${cassandra.size}" />
+		<constructor-arg value="${cassandra.batch}" />
+		<constructor-arg value="${cassandra.events}" />
+		<constructor-arg value="${cassandra.type}" />
+		<constructor-arg value="${cassandra.colType}" />
+		<constructor-arg value="${cassandra.operationType}" />
+		<constructor-arg value="${cassandra.profileId}" />
+		<constructor-arg value="${cassandra.rows}" />
+		<constructor-arg value="${cassandra.threads}" />
+		<constructor-arg value="${cassandra.readSize}" />
+	</bean>
+
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="100" />
+		<property name="maxPoolSize" value="110" />
+		<property name="queueCapacity" value="10" />
+	</bean>
+
+	<bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper" />
+	<bean id="jacksonSerializationConfig" class="org.codehaus.jackson.map.SerializationConfig"
+		factory-bean="objectMapper" factory-method="getSerializationConfig" />
+
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="jacksonSerializationConfig" />
+		<property name="targetMethod" value="setSerializationInclusion" />
+		<property name="arguments">
+			<list>
+				<value type="org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion">NON_NULL</value>
+			</list>
+		</property>
+	</bean>
+
+
+</beans>

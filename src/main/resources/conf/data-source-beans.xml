@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd">
+
+	<context:property-placeholder location="classpath:properties.txt" />
+
+	<!-- NETFLIX Cassandra Datasources -->
+
+	<bean id="connectionPoolConfigurationImpl"
+		class="com.netflix.astyanax.connectionpool.impl.ConnectionPoolConfigurationImpl">
+		<constructor-arg value="myPool" />
+		<property name="port" value="9160" />
+		<property name="maxConnsPerHost" value="10" />
+		<property name="seeds" value="127.0.0.1:9160" />
+
+	</bean>
+
+	<!-- Cassandra Datasources -->
+	<bean id="cassandraHostConfigurator"
+		class="me.prettyprint.cassandra.service.CassandraHostConfigurator">
+		<property name="hosts" value="${cassandra.hosts}" />
+		<property name="maxActive" value="15" />
+		<property name="useSocketKeepalive" value="true" />
+		<property name="maxWaitTimeWhenExhausted" value="5000" />
+		<property name="cassandraThriftSocketTimeout" value="10000" />
+	</bean>
+	<bean id="cassandraConsistencyLevelPolicy"
+		class="me.prettyprint.cassandra.model.AllOneConsistencyLevelPolicy">
+	</bean>
+
+	<bean id="cluster" class="me.prettyprint.cassandra.service.ThriftCluster">
+		<constructor-arg value="${cassandra.cluster}" />
+		<constructor-arg ref="cassandraHostConfigurator" />
+	</bean>
+
+	<bean id="keyspace" class="me.prettyprint.hector.api.factory.HFactory"
+		factory-method="createKeyspace">
+		<constructor-arg value="${cassandra.keyspace}" />
+		<constructor-arg ref="cluster" />
+		<constructor-arg ref="cassandraConsistencyLevelPolicy" />
+	</bean>
+
+</beans>

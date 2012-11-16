@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<context:property-placeholder location="classpath:env.properties" />
+	
+	<!-- 
+	###################################################################################################	
+	Rest Service Beans 
+	###################################################################################################	
+	-->
+	<bean id="_service" class="com.ccrd.rest.service._Service" abstract="true">
+
+	</bean>
+	
+	<bean id="loadService" class="com.ccrd.rest.service.enrichment.EnrichmentService" parent="_service">
+		<property name="historyFacade" ref="historyFacade"/>
+	</bean>
+	
+	<bean id="queryService" class="com.ccrd.rest.service.bootstrap.BootStrapService" parent="_service">
+		<property name="historyFacade" ref="historyFacade" />
+	</bean>
+	
+</beans>

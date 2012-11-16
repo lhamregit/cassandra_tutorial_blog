@@ -1,0 +1,3 @@
+cassandra.hosts=localhost:9171
+cassandra.cluster=Test Cluster
+cassandra.keyspace=IHR_local
