@@ -294,31 +294,7 @@ public class HistoryDAO extends BaseDAO implements IHistoryDAO {
 			for (int i = 0; i < events; i++) {
 				try {
 					Thread.sleep(0);
-
-					HistoryEvent event = new HistoryEvent(i,
-							"this is a history event ");
-					String eventJson = getJsonAsString(event);
-					// log.info("eventJson: " + eventJson);
-					long time = System.currentTimeMillis();
-					long newTime = time + (i*1000);
-					//System.out.println("time    = " + time);
-					//System.out.println("newTime = " +newTime);
-
-					UUID timeListened = UUIDUtils
-							.nonUniqueTimeUuidForDate(newTime);
-
-					Composite colname = new Composite();
-					colname.addComponent(type, StringSerializer.get());
-					colname.addComponent(timeListened, UUIDSerializer.get());
-
-					HColumn<Composite, byte[]> column = HFactory.createColumn(
-							colname, UUIDUtils.getbytes(eventJson),
-							CompositeSerializer.get(),
-							BytesArraySerializer.get());
-					column.setTtl(60 * 60 * 24 * 90);
-
-					mutator.addInsertion(profileId.toString(),
-							MasterHistoryString, column);
+					writeCompostiteColname_String_UUID(profileId, type);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
